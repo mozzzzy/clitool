@@ -12,6 +12,7 @@ import (
 	"github.com/nsf/termbox-go"
 
 	"./list"
+	"./spinner"
 )
 
 /*
@@ -25,6 +26,7 @@ type Terminal struct {
 /*
  * Constants and Package Scope Variables
  */
+
 const PREFIX_QUESTION_RUNE rune = '?'
 
 /*
@@ -125,6 +127,49 @@ func (terminal *Terminal) printList(list *list.List) {
 	}
 }
 
+func (terminal *Terminal) printSpinner(spinner *spinner.Spinner) {
+	// Save start point
+	zeroX := terminal.x
+	zeroY := terminal.y
+
+	// Print spinner
+	spinnerRunes := []rune(spinner.String())
+	colorForeGround := termbox.ColorDefault
+	colorBackGround := termbox.ColorDefault
+	for _, char := range spinnerRunes {
+		switch char {
+		case '⠙':
+			fallthrough
+		case '⠸':
+			fallthrough
+		case '⠴':
+			fallthrough
+		case '⠦':
+			fallthrough
+		case '⠇':
+			fallthrough
+		case '⠋':
+			colorForeGroundOrg := colorForeGround
+			colorForeGround = termbox.ColorCyan
+			termbox.SetCell(terminal.x, terminal.y, rune(char), colorForeGround, colorBackGround)
+			colorForeGround = colorForeGroundOrg
+			terminal.x++
+		default:
+			termbox.SetCell(terminal.x, terminal.y, rune(char), colorForeGround, colorBackGround)
+			terminal.x++
+		}
+	}
+	terminal.x = zeroX
+	terminal.y = zeroY
+}
+
+func (terminal *Terminal) printChecked() {
+	colorForeGround := termbox.ColorGreen
+	colorBackGround := termbox.ColorDefault
+	termbox.SetCell(terminal.x, terminal.y, '✔', colorForeGround, colorBackGround)
+	terminal.x++
+}
+
 func (terminal *Terminal) List(question string, choices []string) string {
 	// Save start point
 	zeroX := terminal.x
@@ -193,15 +238,37 @@ mainloop:
 	return list.Choices[list.CursorPosition]
 }
 
+func (terminal *Terminal) Spinner(message string, finished *bool) {
+	// Create spinner
+	spinner := spinner.New(message)
+
+	for *finished == false {
+		// Print spinner
+		terminal.printSpinner(spinner)
+		// Flush
+		termbox.Flush()
+		time.Sleep(100 * time.Millisecond)
+	}
+	terminal.printChecked()
+	termbox.Flush()
+	terminal.goNextLine()
+}
+
 func main() {
 	terminal := Terminal{
 		x: 0,
 		y: 0,
 	}
 	Init()
+
 	terminal.List("What language do you like?", []string{"go", "javascript", "c++"})
 	terminal.List("What language do you like?", []string{"go", "javascript", "c++"})
-	terminal.List("What language do you like?", []string{"go", "javascript", "c++"})
+
+	fin := new(bool)
+	*fin = false
+	go terminal.Spinner("Please wait for 5 minutes.", fin)
+	time.Sleep(5 * time.Second)
+	*fin = true
 	time.Sleep(2 * time.Second)
 	Close()
 }
