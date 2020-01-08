@@ -130,7 +130,9 @@ mainloop:
 		case termbox.KeySpace:
 			checkbox.ChosePositions = append(checkbox.ChosePositions, checkbox.CursorPosition)
 		case termbox.KeyEnter:
-			break mainloop
+			if len(checkbox.ChosePositions) > 0 {
+				break mainloop
+			}
 		}
 		// Go back to start point
 		x, y = startX, startY
