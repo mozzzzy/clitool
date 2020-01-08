@@ -128,7 +128,11 @@ mainloop:
 				checkbox.CursorPosition++
 			}
 		case termbox.KeySpace:
-			checkbox.ChosePositions = append(checkbox.ChosePositions, checkbox.CursorPosition)
+			if contains(checkbox.CursorPosition, checkbox.ChosePositions) {
+				checkbox.RemoveChose(checkbox.CursorPosition)
+			} else {
+				checkbox.ChosePositions = append(checkbox.ChosePositions, checkbox.CursorPosition)
+			}
 		case termbox.KeyEnter:
 			if len(checkbox.ChosePositions) > 0 {
 				break mainloop
@@ -168,4 +172,15 @@ func (checkbox *Checkbox) RemoveChoice(rmChoiceStr string) {
 		newChoiceStrs = append(newChoiceStrs, choiceStr)
 	}
 	checkbox.ChoiceStrs = newChoiceStrs
+}
+
+func (checkbox *Checkbox) RemoveChose(rmChosePosition int) {
+	var newChosePositions []int
+	for _, chosePosition := range checkbox.ChosePositions {
+		if chosePosition == rmChosePosition {
+			continue
+		}
+		newChosePositions = append(newChosePositions, chosePosition)
+	}
+	checkbox.ChosePositions = newChosePositions
 }
