@@ -128,7 +128,7 @@ mainloop:
 				checkbox.CursorPosition++
 			}
 		case termbox.KeySpace:
-			checkbox.ChosePositions = append(checkbox.ChosePosiitions, checkbox.CursorPosition)
+			checkbox.ChosePositions = append(checkbox.ChosePositions, checkbox.CursorPosition)
 		case termbox.KeyEnter:
 			break mainloop
 		}
@@ -143,13 +143,14 @@ mainloop:
 	}
 	x, y = common.GoNextLine(x, y)
 	choseChoiceStrs := checkbox.GetChoseChoiceStrs()
-	return checkbox.ChoiceStrs[checkbox.CursorPosition], x, y
+	return checkbox.ChoiceStrs, x, y
 }
 
 func (checkbox Checkbox) GetChoseChoiceStrs() (choseChoiceStrs []string) {
 	for _, chosePosition := range checkbox.ChosePositions {
-		choseChoiceStrs := append(choseChoiceStrs, checkbox.ChoiceStrs[chosePosition])
+		choseChoiceStrs = append(choseChoiceStrs, checkbox.ChoiceStrs[chosePosition])
 	}
+	return choseChoiceStrs
 }
 
 func (checkbox *Checkbox) AddChoice(choiceStr string) {
