@@ -39,7 +39,7 @@ var ChoseColorBg termbox.Attribute = termbox.ColorDefault
 
 var NoChoseStr string = "⬡ "
 var NoChoseColorFg termbox.Attribute = termbox.ColorCyan
-var NoChoseColorBg termbox.Attribute = termbox.ColorCyan
+var NoChoseColorBg termbox.Attribute = termbox.ColorDefault
 
 var ChoiceColorFg termbox.Attribute = termbox.ColorDefault
 var ChoiceColorBg termbox.Attribute = termbox.ColorDefault
