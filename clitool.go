@@ -7,6 +7,7 @@ package clitool
 import (
 	"github.com/nsf/termbox-go"
 
+	"github.com/mozzzzy/clitool/checkbox"
 	"github.com/mozzzzy/clitool/common"
 	"github.com/mozzzzy/clitool/list"
 	"github.com/mozzzzy/clitool/spinner"
@@ -42,6 +43,13 @@ func New() *Terminal {
 	terminal.x = 0
 	terminal.y = 0
 	return terminal
+}
+
+func (terminal *Terminal) Checkbox(question string, choiceStrs []string) (choseStrs []string) {
+	chkbox := checkbox.New(choiceStrs)
+	choseStrs, terminal.x, terminal.y = chkbox.Inquire(question, terminal.x, terminal.y)
+	return choseStrs
+
 }
 
 func (terminal *Terminal) List(question string, choiceStrs []string) (answerStr string) {
