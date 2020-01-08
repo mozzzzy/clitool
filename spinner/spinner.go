@@ -5,7 +5,11 @@ package spinner
  */
 
 import (
-	"fmt"
+	"time"
+
+	"github.com/nsf/termbox-go"
+
+	"github.com/mozzzzy/clitool/common"
 )
 
 /*
@@ -13,53 +17,60 @@ import (
  */
 
 type Spinner struct {
-	Message string
-	State   int
+	MessageStr string
+	State      int
 }
 
 /*
  * Constants and Package Scope Variables
  */
 
-const BRAILLE_1_4_5 rune = '⠙'
-const BRAILLE_4_5_6 rune = '⠸'
-const BRAILLE_5_6_3 rune = '⠴'
-const BRAILLE_6_3_2 rune = '⠦'
-const BRAILLE_1_2_3 rune = '⠇'
-const BRAILLE_2_1_4 rune = '⠋'
+var SpinnerElementStrs []string = []string{"⠙", "⠸", "⠴", "⠦", "⠇", "⠋"}
+var SpinnerElementsColorFg termbox.Attribute = termbox.ColorCyan
+var SpinnerElementsColorBg termbox.Attribute = termbox.ColorDefault
+
+var PaddingSpinnerAndMessageStr string = " "
+var PaddingSpinnerAndMessageColorFg termbox.Attribute = termbox.ColorDefault
+var PaddingSpinnerAndMessageColorBg termbox.Attribute = termbox.ColorDefault
+
+var MessageStrColorFg termbox.Attribute = termbox.ColorDefault
+var MessageStrColorBg termbox.Attribute = termbox.ColorDefault
+
+var FinishedStr string = "✔"
+var FinishedColorFg termbox.Attribute = termbox.ColorGreen
+var FinishedColorBg termbox.Attribute = termbox.ColorDefault
 
 /*
  * Functions
  */
 
-func getBraille(state int) rune {
-	var returnBraille rune
-	switch state {
-	case 0:
-		returnBraille = BRAILLE_1_4_5
-	case 1:
-		returnBraille = BRAILLE_4_5_6
-	case 2:
-		returnBraille = BRAILLE_5_6_3
-	case 3:
-		returnBraille = BRAILLE_6_3_2
-	case 4:
-		returnBraille = BRAILLE_1_2_3
-	case 5:
-		returnBraille = BRAILLE_2_1_4
-	}
-	return returnBraille
-}
-
-func New(message string) *Spinner {
+func New(messageStr string) *Spinner {
 	spinner := new(Spinner)
-	spinner.Message = message
+	spinner.MessageStr = messageStr
 	spinner.State = 0
 	return spinner
 }
 
-func (spinner *Spinner) String() string {
-	braille := getBraille(spinner.State)
-	spinner.State = (spinner.State + 1) % 6
-	return fmt.Sprintf("%v %v", string(braille), spinner.Message)
+func (spinner Spinner) Print(x int, y int) (int, int) {
+	// Print a spinner element
+	x, y = common.PrintString(
+		SpinnerElementStrs[spinner.State], SpinnerElementsColorFg, SpinnerElementsColorBg, x, y)
+	// Print padding between spinner and message
+	x, y = common.PrintString(
+		PaddingSpinnerAndMessageStr, PaddingSpinnerAndMessageColorFg, PaddingSpinnerAndMessageColorBg, x, y)
+	// Print message
+	x, y = common.PrintString(
+		spinner.MessageStr, MessageStrColorFg, MessageStrColorBg, x, y)
+	return x, y
+}
+
+func (spinner *Spinner) Spin(x int, y int, finished *bool) (int, int) {
+	for *finished == false {
+		spinner.Print(x, y)
+		spinner.State = (spinner.State + 1) % len(SpinnerElementStrs)
+		time.Sleep(100 * time.Millisecond)
+	}
+	common.PrintString(FinishedStr, FinishedColorFg, FinishedColorBg, x, y)
+	x, y = common.GoNextLine(x, y)
+	return x, y
 }
