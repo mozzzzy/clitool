@@ -143,7 +143,7 @@ mainloop:
 	}
 	x, y = common.GoNextLine(x, y)
 	choseChoiceStrs := checkbox.GetChoseChoiceStrs()
-	return checkbox.ChoiceStrs, x, y
+	return choseChoiceStrs, x, y
 }
 
 func (checkbox Checkbox) GetChoseChoiceStrs() (choseChoiceStrs []string) {
