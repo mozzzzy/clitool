@@ -45,6 +45,16 @@ func GetKey() (returnKey termbox.Key) {
 	return returnKey
 }
 
+func GetEventKey() (returnEvent termbox.Event) {
+	// Poll event
+	switch ev := termbox.PollEvent(); ev.Type {
+	// Keyboard is typed
+	case termbox.EventKey:
+		returnEvent = ev
+	}
+	return returnEvent
+}
+
 func GoNextLine(x int, y int) (int, int) {
 	x = 0
 	y++
