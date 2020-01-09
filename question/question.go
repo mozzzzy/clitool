@@ -15,7 +15,6 @@ import (
  */
 
 type Question struct {
-	PrefixStr   string
 	QuestionStr string
 	AnswerStr   string
 }
@@ -44,8 +43,6 @@ var AnswerColorBg termbox.Attribute = termbox.ColorDefault
 
 func New(questionStr string) *Question {
 	question := new(Question)
-	question.PrefixStr = PrefixStr
-	question.QuestionStr = questionStr
 	return question
 }
 
