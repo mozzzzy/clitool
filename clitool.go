@@ -10,6 +10,7 @@ import (
 	"github.com/mozzzzy/clitool/checkbox"
 	"github.com/mozzzzy/clitool/common"
 	"github.com/mozzzzy/clitool/confirm"
+	"github.com/mozzzzy/clitool/input"
 	"github.com/mozzzzy/clitool/list"
 	"github.com/mozzzzy/clitool/message"
 	"github.com/mozzzzy/clitool/spinner"
@@ -56,6 +57,11 @@ func (terminal *Terminal) Checkbox(question string, choiceStrs []string) (choseS
 func (terminal *Terminal) Confirm(question string) (answerBool bool) {
 	answerBool, terminal.x, terminal.y = confirm.Inquire(question, terminal.x, terminal.y)
 	return answerBool
+}
+
+func (terminal *Terminal) Input(question string) (answerStr string) {
+	answerStr, terminal.x, terminal.y = input.Inquire(question, terminal.x, terminal.y)
+	return answerStr
 }
 
 func (terminal *Terminal) List(question string, choiceStrs []string) (answerStr string) {
