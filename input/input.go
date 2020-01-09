@@ -73,12 +73,14 @@ mainloop:
 		case termbox.KeyBackspace:
 			fallthrough
 		case termbox.KeyBackspace2:
-			x--
-			answerRunes = removeRule(answerRunes, x-answerStartX)
-			termbox.SetCell(x, y, ' ', InputColorFg, InputColorBg)
-			// Move cursor
-			termbox.SetCursor(x, y)
-			termbox.Flush()
+			if x > answerStartX {
+				x--
+				answerRunes = removeRule(answerRunes, x-answerStartX)
+				termbox.SetCell(x, y, ' ', InputColorFg, InputColorBg)
+				// Move cursor
+				termbox.SetCursor(x, y)
+				termbox.Flush()
+			}
 			continue
 		}
 		answerRunes = append(answerRunes, event.Ch)
