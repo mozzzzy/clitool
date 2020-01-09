@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
+	"github.com/mozzzzy/clitool/color"
 	"github.com/mozzzzy/clitool/message"
 )
 
@@ -25,7 +26,10 @@ import (
 
 func main() {
 	message.PrefixStr = "! "
+	message.PrefixColorFg = color.Cyan
+
 	message.SuffixStr = " !"
+	message.SuffixColorFg = color.Cyan
 
 	clitool.Init()
 
