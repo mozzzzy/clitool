@@ -10,6 +10,7 @@ import (
 	"github.com/mozzzzy/clitool/checkbox"
 	"github.com/mozzzzy/clitool/common"
 	"github.com/mozzzzy/clitool/list"
+	"github.com/mozzzzy/clitool/message"
 	"github.com/mozzzzy/clitool/spinner"
 )
 
@@ -56,6 +57,11 @@ func (terminal *Terminal) List(question string, choiceStrs []string) (answerStr 
 	lst := list.New(choiceStrs)
 	answerStr, terminal.x, terminal.y = lst.Inquire(question, terminal.x, terminal.y)
 	return answerStr
+}
+
+func (terminal *Terminal) Message(messageStr string) {
+	msg := message.New(messageStr)
+	terminal.x, terminal.y = msg.Print(terminal.x, terminal.y)
 }
 
 func (terminal *Terminal) Spinner(messageStr string, finished *bool) {
