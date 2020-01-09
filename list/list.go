@@ -91,8 +91,8 @@ func (list *List) Inquire(qStr string, x int, y int) (string, int, int) {
 mainloop:
 	for {
 		// Get a key input
-		key := common.GetKey()
-		switch key {
+		event := common.GetEventKey()
+		switch event.Key {
 		case termbox.KeyArrowUp:
 			if list.CursorPosition > 0 {
 				list.CursorPosition--
@@ -105,6 +105,17 @@ mainloop:
 			q.AnswerStr = list.ChoiceStrs[list.CursorPosition]
 			break mainloop
 		}
+		switch event.Ch {
+		case 'k':
+			if list.CursorPosition > 0 {
+				list.CursorPosition--
+			}
+		case 'j':
+			if list.CursorPosition < len(list.ChoiceStrs)-1 {
+				list.CursorPosition++
+			}
+		}
+
 		// Go back to start point
 		x, y = startX, startY
 		// Reprint question

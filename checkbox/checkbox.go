@@ -34,11 +34,11 @@ var NoCursorColorFg termbox.Attribute = termbox.ColorDefault
 var NoCursorColorBg termbox.Attribute = termbox.ColorDefault
 
 var ChoseStr string = "⬢ "
-var ChoseColorFg termbox.Attribute = termbox.ColorCyan
+var ChoseColorFg termbox.Attribute = termbox.ColorGreen
 var ChoseColorBg termbox.Attribute = termbox.ColorDefault
 
 var NoChoseStr string = "⬡ "
-var NoChoseColorFg termbox.Attribute = termbox.ColorCyan
+var NoChoseColorFg termbox.Attribute = termbox.ColorDefault
 var NoChoseColorBg termbox.Attribute = termbox.ColorDefault
 
 var ChoiceColorFg termbox.Attribute = termbox.ColorDefault
@@ -117,8 +117,8 @@ func (checkbox *Checkbox) Inquire(qStr string, x int, y int) ([]string, int, int
 mainloop:
 	for {
 		// Get a key input
-		key := common.GetKey()
-		switch key {
+		event := common.GetEventKey()
+		switch event.Key {
 		case termbox.KeyArrowUp:
 			if checkbox.CursorPosition > 0 {
 				checkbox.CursorPosition--
@@ -138,6 +138,17 @@ mainloop:
 				break mainloop
 			}
 		}
+		switch event.Ch {
+		case 'k':
+			if checkbox.CursorPosition > 0 {
+				checkbox.CursorPosition--
+			}
+		case 'j':
+			if checkbox.CursorPosition < len(checkbox.ChoiceStrs)-1 {
+				checkbox.CursorPosition++
+			}
+		}
+
 		// Go back to start point
 		x, y = startX, startY
 		// Reprint question
