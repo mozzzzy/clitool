@@ -51,5 +51,7 @@ func (message Message) Print(x int, y int) (int, int) {
 		message.MessageStr, MessageColorFg, MessageColorBg, x, y)
 	// Print suffix
 	x, y = common.PrintString(SuffixStr, SuffixColorFg, SuffixColorBg, x, y)
+	x, y = common.GoNextLine(x, y)
+
 	return x, y
 }
