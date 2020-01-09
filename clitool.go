@@ -14,6 +14,7 @@ import (
 	"github.com/mozzzzy/clitool/list"
 	"github.com/mozzzzy/clitool/message"
 	"github.com/mozzzzy/clitool/password"
+	"github.com/mozzzzy/clitool/progressbar"
 	"github.com/mozzzzy/clitool/spinner"
 )
 
@@ -79,6 +80,14 @@ func (terminal *Terminal) Message(messageStr string) {
 func (terminal *Terminal) Password(question string) (answerStr string) {
 	answerStr, terminal.x, terminal.y = password.Inquire(question, terminal.x, terminal.y)
 	return answerStr
+}
+
+func (terminal *Terminal) Progressbar(
+	messageStr string, min float64, state *float64, max float64,
+) {
+	pbar := progressbar.New(messageStr, min, state, max)
+	go pbar.Show(terminal.x, terminal.y)
+	terminal.x, terminal.y = common.GoNextLine(terminal.x, terminal.y)
 }
 
 func (terminal *Terminal) Spinner(messageStr string, finished *bool) {
