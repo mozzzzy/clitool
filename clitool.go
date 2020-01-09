@@ -13,6 +13,7 @@ import (
 	"github.com/mozzzzy/clitool/input"
 	"github.com/mozzzzy/clitool/list"
 	"github.com/mozzzzy/clitool/message"
+	"github.com/mozzzzy/clitool/password"
 	"github.com/mozzzzy/clitool/spinner"
 )
 
@@ -73,6 +74,11 @@ func (terminal *Terminal) List(question string, choiceStrs []string) (answerStr 
 func (terminal *Terminal) Message(messageStr string) {
 	msg := message.New(messageStr)
 	terminal.x, terminal.y = msg.Print(terminal.x, terminal.y)
+}
+
+func (terminal *Terminal) Password(question string) (answerStr string) {
+	answerStr, terminal.x, terminal.y = password.Inquire(question, terminal.x, terminal.y)
+	return answerStr
 }
 
 func (terminal *Terminal) Spinner(messageStr string, finished *bool) {
