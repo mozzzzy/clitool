@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
+	"github.com/mozzzzy/clitool/message"
+	"github.com/mozzzzy/clitool/password"
 )
 
 /*
@@ -25,9 +27,12 @@ import (
 func main() {
 	clitool.Init()
 
-	terminal := clitool.New()
+	password := password.New("Please type password.")
+	answer := clitool.Inquire(password).(string)
 
-	terminal.Password("Please write password.")
+	msg := message.New(answer)
+	clitool.Print(msg)
+
 	time.Sleep(2 * time.Second)
 	clitool.Close()
 }

@@ -6,6 +6,8 @@ package common
 
 import (
 	"github.com/nsf/termbox-go"
+
+	"github.com/mozzzzy/clitool/color"
 )
 
 /*
@@ -21,12 +23,17 @@ import (
  */
 
 func PrintString(
-	str string, clrFg termbox.Attribute, clrBg termbox.Attribute, x int, y int,
+	str string, clrFg color.Color, clrBg color.Color, x int, y int,
 ) (int, int) {
 	strRunes := []rune(str)
 	for _, rne := range strRunes {
-		termbox.SetCell(x, y, rne, clrFg, clrBg)
-		x++
+		switch rne {
+		case '\n':
+			x, y = 0, y+1
+		default:
+			termbox.SetCell(x, y, rne, clrFg.Termbox, clrBg.Termbox)
+			x++
+		}
 	}
 	termbox.Flush()
 	return x, y

@@ -5,9 +5,12 @@ package main
  */
 
 import (
+	"strings"
 	"time"
 
 	"github.com/mozzzzy/clitool"
+	"github.com/mozzzzy/clitool/checkbox"
+	"github.com/mozzzzy/clitool/message"
 )
 
 /*
@@ -25,9 +28,15 @@ import (
 func main() {
 	clitool.Init()
 
-	terminal := clitool.New()
+	qStr := "Please select all languages you like."
+	choices := []string{"c", "c++", "go", "java", "javascript", "php", "python"}
+	chkboxDefault := checkbox.New(qStr, choices)
+	answers := clitool.Inquire(chkboxDefault)
 
-	terminal.Checkbox("Which language do you like?", []string{"go", "javascript", "c++", "java"})
+	msgStr := "answers are (" + strings.Join(answers.([]string), ",") + ")"
+	msg := message.New(msgStr)
+	clitool.Print(msg)
+
 	time.Sleep(2 * time.Second)
 
 	clitool.Close()

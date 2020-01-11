@@ -25,17 +25,35 @@ import (
  */
 
 func main() {
-	message.PrefixStr = "! "
-	message.PrefixColorFg = color.Cyan
-
-	message.SuffixStr = " !"
-	message.SuffixColorFg = color.Cyan
-
 	clitool.Init()
 
-	terminal := clitool.New()
+	msgStr := "This is test message."
 
-	terminal.Message("This is test message.")
+	msgDefault := message.New(msgStr)
+	clitool.Print(msgDefault)
+
+	msgWithColor := message.New(msgStr)
+	msgWithColor.SetMessageColor(color.Red, color.Green)
+	clitool.Print(msgWithColor)
+
+	msgWithPrefix := message.New(msgStr)
+	msgWithPrefix.SetPrefix(color.Green, color.Default, "[prefix]")
+	clitool.Print(msgWithPrefix)
+
+	msgWithSuffix := message.New(msgStr)
+	msgWithSuffix.SetSuffix(color.Green, color.Default, "[suffix]")
+	clitool.Print(msgWithSuffix)
+
+	msgWithPrefixSuffix := message.New(msgStr)
+	msgWithPrefixSuffix.SetPrefix(color.Green, color.Default, "[prefix]")
+	msgWithPrefixSuffix.SetSuffix(color.Green, color.Default, "[suffix]")
+	clitool.Print(msgWithPrefixSuffix)
+
+	time.Sleep(2 * time.Second)
+
+	msgDefault.SetSuffix(color.Cyan, color.Default, "[This suffix is reprinted]")
+	clitool.RePrintAll()
+
 	time.Sleep(2 * time.Second)
 
 	clitool.Close()

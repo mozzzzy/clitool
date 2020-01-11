@@ -5,8 +5,9 @@ package confirm
  */
 
 import (
-	"github.com/nsf/termbox-go"
+	"fmt"
 
+	"github.com/mozzzzy/clitool/color"
 	"github.com/mozzzzy/clitool/common"
 	"github.com/mozzzzy/clitool/question"
 )
@@ -15,57 +16,122 @@ import (
  * Types
  */
 
+type Confirm struct {
+	q                   question.Question
+	parenthesisLeftStr  string
+	parenthesisRightStr string
+	separatorStr        string
+	candidateColorBg    color.Color
+	candidateColorFg    color.Color
+	answerColorBg       color.Color
+	answerColorFg       color.Color
+	yesRune             rune
+	noRune              rune
+	minX                int
+	maxX                int
+	minY                int
+	maxY                int
+	resolved            bool
+}
+
 /*
  * Constants and Package Scope Variables
  */
 
-var PaddingQuestionAndYesNo string = " "
-var PaddingQuestionAndYesNoColorFg termbox.Attribute = termbox.ColorDefault
-var PaddingQuestionAndYesNoColorBg termbox.Attribute = termbox.ColorDefault
-
-var PrefixStr string = "("
-var PrefixColorFg termbox.Attribute = termbox.ColorDefault
-var PrefixColorBg termbox.Attribute = termbox.ColorDefault
-
-var YesRune rune = 'y'
-var YesColorFg termbox.Attribute = termbox.ColorDefault
-var YesColorBg termbox.Attribute = termbox.ColorDefault
-
-var SeparatorStr string = "/"
-var SeparatorColorFg termbox.Attribute = termbox.ColorDefault
-var SeparatorColorBg termbox.Attribute = termbox.ColorDefault
-
-var NoRune rune = 'N'
-var NoColorFg termbox.Attribute = termbox.ColorDefault
-var NoColorBg termbox.Attribute = termbox.ColorDefault
-
-var SuffixStr string = ")"
-var SuffixColorFg termbox.Attribute = termbox.ColorDefault
-var SuffixColorBg termbox.Attribute = termbox.ColorDefault
+var (
+	DEFAULT_PARENTHESIS_LEFT_STR  string      = "("
+	DEFAULT_PARENTHESIS_RIGHT_STR string      = ")"
+	DEFAULT_SEPARATOR_STR         string      = "/"
+	DEFAULT_YES_RUNE              rune        = 'y'
+	DEFAULT_NO_RUNE               rune        = 'N'
+	DEFAULT_CANDIDATE_COLOR_BG    color.Color = color.Default
+	DEFAULT_CANDIDATE_COLOR_FG    color.Color = color.Default
+	DEFAULT_ANSWER_COLOR_BG       color.Color = color.Default
+	DEFAULT_ANSWER_COLOR_FG       color.Color = color.Cyan
+)
 
 /*
  * Functions
  */
 
-func Inquire(qStr string, x int, y int) (bool, int, int) {
-	// Save start point
-	startX := x
-	startY := y
-	// Print question
+func New(questionStr string) *Confirm {
+	confirm := new(Confirm)
+	confirm.SetQuestion(questionStr)
+	confirm.parenthesisLeftStr = DEFAULT_PARENTHESIS_LEFT_STR
+	confirm.parenthesisRightStr = DEFAULT_PARENTHESIS_RIGHT_STR
+	confirm.separatorStr = DEFAULT_SEPARATOR_STR
+	confirm.yesRune = DEFAULT_YES_RUNE
+	confirm.noRune = DEFAULT_NO_RUNE
+	confirm.candidateColorBg = DEFAULT_CANDIDATE_COLOR_BG
+	confirm.candidateColorFg = DEFAULT_CANDIDATE_COLOR_FG
+	confirm.answerColorBg = DEFAULT_ANSWER_COLOR_BG
+	confirm.answerColorFg = DEFAULT_ANSWER_COLOR_FG
+	return confirm
+}
+
+func (confirm *Confirm) GetMinX() int {
+	return confirm.minX
+}
+
+func (confirm *Confirm) GetMaxX() int {
+	return confirm.maxX
+}
+
+func (confirm *Confirm) GetMinY() int {
+	return confirm.minY
+}
+
+func (confirm *Confirm) GetMaxY() int {
+	return confirm.maxY
+}
+
+func (confirm *Confirm) SetMinX(minX int) {
+	// Set minX to inner question for q.Print() method.
+	confirm.q.SetMinX(minX)
+	// Set minX
+	confirm.minX = minX
+}
+
+func (confirm *Confirm) SetMinY(minY int) {
+	// Set minY to inner question for q.Print() method.
+	confirm.q.SetMinY(minY)
+	// Set minY
+	confirm.minY = minY
+}
+
+func (confirm *Confirm) SetQuestion(qStr string) {
 	q := question.New(qStr)
-	x, y = q.PrintQuestion(x, y)
-	// Print padding
-	x, y = common.PrintString(
-		PaddingQuestionAndYesNo,
-		PaddingQuestionAndYesNoColorFg,
-		PaddingQuestionAndYesNoColorBg,
-		x, y)
-	// Print candidates
-	x, y = common.PrintString(PrefixStr, PrefixColorFg, PrefixColorBg, x, y)
-	x, y = common.PrintString(string(YesRune), YesColorFg, YesColorBg, x, y)
-	x, y = common.PrintString(SeparatorStr, SeparatorColorFg, SeparatorColorBg, x, y)
-	x, y = common.PrintString(string(NoRune), NoColorFg, NoColorBg, x, y)
-	x, y = common.PrintString(SuffixStr, SuffixColorFg, SuffixColorBg, x, y)
+	confirm.q = *q
+}
+
+func (confirm *Confirm) Print() {
+	// NOTE if this confirm has alread printed, its maxX and maxY also has already set.
+	//      But the case that its length is changed exists.
+	//      So I clear old maxX and maxY here.
+	//      These values are calculated again in following logic.
+	confirm.maxX = 0
+	confirm.maxY = 0
+
+	// Set parenthesis, separator, candidates
+	if !confirm.resolved {
+		candidates := fmt.Sprintf("%v%v%v%v%v",
+			confirm.parenthesisLeftStr,
+			string(confirm.yesRune),
+			confirm.separatorStr,
+			string(confirm.noRune),
+			confirm.parenthesisRightStr,
+		)
+		confirm.q.SetSuffix(confirm.candidateColorFg, confirm.candidateColorBg, candidates)
+	} else {
+		confirm.q.SetSuffixColor(confirm.answerColorFg, confirm.answerColorBg)
+	}
+	// Print question
+	confirm.q.Print()
+	confirm.updateMinMax(confirm.q.GetMaxX(), confirm.q.GetMaxY())
+}
+
+func (confirm *Confirm) Inquire() interface{} {
+	confirm.Print()
 
 	var answerBool bool
 	// While typed YesRune or NoRune by keyboard
@@ -74,30 +140,44 @@ mainloop:
 		// Get an event input
 		event := common.GetEventKey()
 		switch event.Ch {
-		case YesRune:
+		case confirm.yesRune:
 			answerBool = true
+			confirm.resolved = true
+			confirm.q.Resolve(string(confirm.yesRune))
 			break mainloop
-		case NoRune:
+		case confirm.noRune:
 			answerBool = false
+			confirm.resolved = true
+			confirm.q.Resolve(string(confirm.noRune))
 			break mainloop
 		}
 	}
-	// Save end point
-	endX := x
-	// Go back to start point
-	x, y = startX, startY
-	// Print answer
-	if answerBool {
-		q.AnswerStr = string(YesRune)
-	} else {
-		q.AnswerStr = string(NoRune)
-	}
-	x, y = q.PrintAnswer(x, y)
-	for x <= endX {
-		x, y = common.PrintString(" ", termbox.ColorDefault, termbox.ColorDefault, x, y)
-	}
-	// Go to next line
-	x, y = common.GoNextLine(x, y)
 
-	return answerBool, x, y
+	for yCursor := confirm.minY; yCursor <= confirm.maxY; yCursor++ {
+		for xCursor := confirm.minX; xCursor <= confirm.maxX; xCursor++ {
+			common.PrintString(" ", color.Default, color.Default, xCursor, yCursor)
+		}
+	}
+	confirm.Print()
+
+	return answerBool
+}
+
+func (confirm *Confirm) updateMinMax(x int, y int) {
+	// Update maxX
+	if confirm.maxX < x {
+		confirm.maxX = x
+	}
+	// Update maxY
+	if confirm.maxY < y {
+		confirm.maxY = y
+	}
+	// Update minX
+	if confirm.minX > x {
+		confirm.minX = x
+	}
+	// Update minY
+	if confirm.minY > y {
+		confirm.minY = y
+	}
 }
