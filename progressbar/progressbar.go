@@ -245,6 +245,7 @@ func (progressbar *Progressbar) Print() {
 }
 
 func (progressbar *Progressbar) Run() {
+	go common.ExitByCtlC()
 	for *(progressbar.state) <= progressbar.max {
 		progressbar.Print()
 		time.Sleep(100 * time.Millisecond)

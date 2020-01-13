@@ -126,6 +126,7 @@ func (spinner *Spinner) SetMinY(minY int) {
 }
 
 func (spinner *Spinner) Run() {
+	go common.ExitByCtlC()
 	for spinner.resolved == false {
 		spinner.Print()
 		spinner.elementCursor = (spinner.elementCursor + 1) % len(spinner.elementStrs)

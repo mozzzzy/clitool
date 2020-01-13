@@ -60,6 +60,7 @@ func Close() {
 }
 
 func Init() error {
+	go common.ExitByCtlC()
 	err := termbox.Init()
 	return err
 }

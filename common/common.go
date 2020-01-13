@@ -5,6 +5,8 @@ package common
  */
 
 import (
+	"os"
+
 	"github.com/nsf/termbox-go"
 
 	"github.com/mozzzzy/clitool/color"
@@ -21,6 +23,18 @@ import (
 /*
  * Functions
  */
+
+func ExitByCtlC() {
+	// Poll event
+	switch ev := termbox.PollEvent(); ev.Type {
+	// Keyboard is typed
+	case termbox.EventKey:
+		if ev.Key == termbox.KeyCtrlC {
+			termbox.Close()
+			os.Exit(0)
+		}
+	}
+}
 
 func PrintString(
 	str string, clrFg color.Color, clrBg color.Color, x int, y int,
@@ -44,6 +58,10 @@ func GetKey() (returnKey termbox.Key) {
 	switch ev := termbox.PollEvent(); ev.Type {
 	// Keyboard is typed
 	case termbox.EventKey:
+		if ev.Key == termbox.KeyCtrlC {
+			termbox.Close()
+			os.Exit(0)
+		}
 		returnKey = ev.Key
 	// Terminal is resized
 	case termbox.EventResize:
@@ -57,6 +75,10 @@ func GetEventKey() (returnEvent termbox.Event) {
 	switch ev := termbox.PollEvent(); ev.Type {
 	// Keyboard is typed
 	case termbox.EventKey:
+		if ev.Key == termbox.KeyCtrlC {
+			termbox.Close()
+			os.Exit(0)
+		}
 		returnEvent = ev
 	}
 	return returnEvent
