@@ -70,6 +70,15 @@ func GetKey() (returnKey termbox.Key) {
 	return returnKey
 }
 
+func GetEsc() {
+	for {
+		key := GetKey()
+		if key == termbox.KeyEsc {
+			return
+		}
+	}
+}
+
 func GetEventKey() (returnEvent termbox.Event) {
 	// Poll event
 	switch ev := termbox.PollEvent(); ev.Type {

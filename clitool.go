@@ -115,3 +115,7 @@ func GetMaxY(pSlice []printable) (y int) {
 	}
 	return y
 }
+
+func WaitEsc() {
+	common.GetEsc()
+}
