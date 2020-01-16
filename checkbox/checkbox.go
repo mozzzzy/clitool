@@ -110,6 +110,16 @@ func New(questionStr string, choices []string) *Checkbox {
 	return checkbox
 }
 
+func (checkbox *Checkbox) Check(choseStrs []string) {
+	for _, choseStr := range choseStrs {
+		for index, choiceStr := range checkbox.choiceStrs {
+			if choseStr == choiceStr {
+				checkbox.chosePositions = append(checkbox.chosePositions, index)
+			}
+		}
+	}
+}
+
 func (checkbox *Checkbox) GetMinX() int {
 	return checkbox.minX
 }
