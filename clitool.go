@@ -136,8 +136,9 @@ func Error(msg string) {
 	Print(errorMessage)
 }
 
-func Checkbox(question string, choices []string) []string {
+func Checkbox(question string, choices []string, choses []string) []string {
 	chkbox := checkbox.New(question, choices)
+	chkbox.Check(choses)
 	answers := Inquire(chkbox)
 	return answers.([]string)
 }

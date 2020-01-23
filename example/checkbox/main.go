@@ -28,7 +28,7 @@ func main() {
 
 	qStr := "Please select all languages you like."
 	choices := []string{"c", "c++", "go", "java", "javascript", "php", "python"}
-	answers := clitool.Checkbox(qStr, choices)
+	answers := clitool.Checkbox(qStr, choices, nil)
 
 	msgStr := "answers are (" + strings.Join(answers, ",") + ")"
 	clitool.Message(msgStr)
