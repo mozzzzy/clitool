@@ -6,6 +6,16 @@ package clitool
 
 import (
 	"github.com/mozzzzy/clitool/common"
+	"github.com/mozzzzy/clitool/confirm"
+	"github.com/mozzzzy/clitool/checkbox"
+	"github.com/mozzzzy/clitool/errorMessage"
+	"github.com/mozzzzy/clitool/input"
+	"github.com/mozzzzy/clitool/message"
+	"github.com/mozzzzy/clitool/list"
+	"github.com/mozzzzy/clitool/password"
+	"github.com/mozzzzy/clitool/progressbar"
+	"github.com/mozzzzy/clitool/spinner"
+	"github.com/mozzzzy/clitool/question"
 	"github.com/nsf/termbox-go"
 )
 
@@ -118,4 +128,65 @@ func GetMaxY(pSlice []printable) (y int) {
 
 func WaitEsc() {
 	common.GetEsc()
+}
+
+// Following functions are shorthand of Print and Inquire call of each types.
+func Error(msg string) {
+	errorMessage := errorMessage.New(msg)
+	Print(errorMessage)
+}
+
+func Checkbox(question string, choices []string) []string {
+	chkbox := checkbox.New(question, choices)
+	answers := Inquire(chkbox)
+	return answers.([]string)
+}
+
+func Confirm(question string) bool {
+	cfm := confirm.New(question)
+	answer := Inquire(cfm)
+	return answer.(bool)
+}
+
+func Input(question string) string {
+	input := input.New(question)
+	answer := Inquire(input)
+	return answer.(string)
+}
+
+func Message(msgStr string) {
+	msg := message.New(msgStr)
+	Print(msg)
+}
+
+func List(question string, choices []string) string {
+	lst := list.New(question, choices)
+	answer := Inquire(lst)
+	return answer.(string)
+}
+
+func Password(question string) string {
+	passwd := password.New(question)
+	answer := Inquire(passwd)
+	return answer.(string)
+}
+
+func Progressbar(
+	message string, min float64, state *float64, max float64,
+) *progressbar.Progressbar {
+	pbar := progressbar.New(message, min, state, max)
+	Run(pbar)
+	return pbar
+}
+
+func Spinner(message string) *spinner.Spinner {
+	spnr := spinner.New(message)
+	Run(spnr)
+	return spnr
+}
+
+func Question(message string) *question.Question {
+	q := question.New(message)
+	Print(q)
+	return q
 }

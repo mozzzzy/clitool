@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
-	"github.com/mozzzzy/clitool/list"
-	"github.com/mozzzzy/clitool/message"
 )
 
 /*
@@ -29,11 +27,9 @@ func main() {
 
 	qStr := "What is your favorite language?"
 	choices := []string{"c", "c++", "go", "java", "javascript", "php", "python"}
-	lstDefault := list.New(qStr, choices)
-	answer := clitool.Inquire(lstDefault)
+	answer := clitool.List(qStr, choices)
 
-	msg := message.New("answer is " + answer.(string))
-	clitool.Print(msg)
+	clitool.Message("answer is " + answer)
 
 	time.Sleep(2 * time.Second)
 

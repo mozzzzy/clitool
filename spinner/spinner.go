@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool/color"
+	"github.com/mozzzzy/clitool/common"
 	"github.com/mozzzzy/clitool/message"
 )
 

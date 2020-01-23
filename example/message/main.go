@@ -29,8 +29,7 @@ func main() {
 
 	msgStr := "This is test message."
 
-	msgDefault := message.New(msgStr)
-	clitool.Print(msgDefault)
+	clitool.Message(msgStr)
 
 	msgWithColor := message.New(msgStr)
 	msgWithColor.SetMessageColor(color.Red, color.Green)
@@ -51,7 +50,7 @@ func main() {
 
 	time.Sleep(2 * time.Second)
 
-	msgDefault.SetSuffix(color.Cyan, color.Default, "[This suffix is reprinted]")
+	msgWithColor.SetSuffix(color.Cyan, color.Default, "[This suffix is reprinted]")
 	clitool.RePrintAll()
 
 	time.Sleep(2 * time.Second)

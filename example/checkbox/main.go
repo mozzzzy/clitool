@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
-	"github.com/mozzzzy/clitool/checkbox"
-	"github.com/mozzzzy/clitool/message"
 )
 
 /*
@@ -30,12 +28,10 @@ func main() {
 
 	qStr := "Please select all languages you like."
 	choices := []string{"c", "c++", "go", "java", "javascript", "php", "python"}
-	chkboxDefault := checkbox.New(qStr, choices)
-	answers := clitool.Inquire(chkboxDefault)
+	answers := clitool.Checkbox(qStr, choices)
 
-	msgStr := "answers are (" + strings.Join(answers.([]string), ",") + ")"
-	msg := message.New(msgStr)
-	clitool.Print(msg)
+	msgStr := "answers are (" + strings.Join(answers, ",") + ")"
+	clitool.Message(msgStr)
 
 	time.Sleep(2 * time.Second)
 

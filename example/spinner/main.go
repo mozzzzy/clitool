@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
-	"github.com/mozzzzy/clitool/spinner"
 )
 
 /*
@@ -27,14 +26,12 @@ func main() {
 	clitool.Init()
 
 	// success case
-	spinner1 := spinner.New("Please wait a bit...")
-	clitool.Run(spinner1)
+	spinner1 := clitool.Spinner("Please wait a bit...")
 	time.Sleep(5 * time.Second)
 	spinner1.Resolve(true)
 
 	// failure case
-	spinner2 := spinner.New("Please wait a bit...")
-	clitool.Run(spinner2)
+	spinner2 := clitool.Spinner("Please wait a bit...")
 	time.Sleep(5 * time.Second)
 	spinner2.Resolve(false)
 

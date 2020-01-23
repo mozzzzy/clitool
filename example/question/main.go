@@ -29,8 +29,7 @@ func main() {
 
 	qStr := "Is this test question?"
 
-	qDefault := question.New(qStr)
-	clitool.Print(qDefault)
+	qDefault := clitool.Question(qStr)
 
 	qWithColor := question.New(qStr)
 	qWithColor.SetQuestionColor(color.Red, color.Green)

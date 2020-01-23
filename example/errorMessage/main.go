@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
-	"github.com/mozzzzy/clitool/errorMessage"
 )
 
 /*
@@ -26,10 +25,7 @@ import (
 func main() {
 	clitool.Init()
 
-	eStr := "Is this test error"
-
-	eDefault := errorMessage.New(eStr)
-	clitool.Print(eDefault)
+	clitool.Error("This is test error.")
 
 	time.Sleep(2 * time.Second)
 

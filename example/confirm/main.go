@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"github.com/mozzzzy/clitool"
-	"github.com/mozzzzy/clitool/confirm"
-	"github.com/mozzzzy/clitool/message"
 )
 
 /*
@@ -27,15 +25,11 @@ import (
 func main() {
 	clitool.Init()
 
-	confirm := confirm.New("Will you marry me?")
-	answer := clitool.Inquire(confirm).(bool)
-
+	answer := clitool.Confirm("Will you marry me?")
 	if answer {
-		msg := message.New("accepted.")
-		clitool.Print(msg)
+		clitool.Message("Accepted.")
 	} else {
-		msg := message.New("rejected.")
-		clitool.Print(msg)
+		clitool.Message("Rejected.")
 	}
 
 	time.Sleep(2 * time.Second)
